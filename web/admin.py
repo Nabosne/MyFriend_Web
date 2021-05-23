@@ -13,12 +13,12 @@ class TipoLocalAdmin(admin.ModelAdmin):
 
 @admin.register(Espaco)
 class EspacoAdmin(admin.ModelAdmin):
-    list_display = ['nome']
+    list_display = ['local', 'nome']
 
 @admin.register(Destino)
 class DestinoAdmin(admin.ModelAdmin):
-    list_display = ['id']
+    list_display = ['local', 'espaco_inicio','espaco_final']
 
 @admin.register(Percurso)
 class PercursoAdmin(admin.ModelAdmin):
-    list_display = ['id']
+    list_display = ['local','destino','sequencia']

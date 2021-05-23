@@ -54,21 +54,24 @@ class Espaco(models.Model):
     class Meta:
         db_table = 'Espaco'
         verbose_name_plural = "Espaços"
-        ordering = ("nome", "beacon_espaco")
+        ordering = ("local", "nome")
 
 class Destino(models.Model):
+    local = models.ForeignKey("Local", on_delete=models.CASCADE, related_name='destinos',null=True)
     espaco_inicio = models.ForeignKey("Espaco", on_delete=models.CASCADE, related_name='origem',null=False)
     espaco_final = models.ForeignKey("Espaco", on_delete=models.CASCADE, related_name='destino',null=False)
 
     
     def __str__(self):
-        return str(self.id)
+        return str(self.espaco_inicio)+' -> '+str(self.espaco_final)
 
     class Meta:
         db_table = 'Destino'
         verbose_name_plural = "Destinos"
+        ordering = ("local", "espaco_inicio", 'espaco_final')
 
 class Percurso(models.Model):
+    local = models.ForeignKey("Local", on_delete=models.CASCADE, related_name='caminhos',null=True)
     destino = models.ForeignKey("Destino", on_delete=models.CASCADE, related_name='percursos')
     espaco_inicio = models.ForeignKey("Espaco", on_delete=models.CASCADE, related_name='espaco_inicio',null=False)
     espaco_fim = models.ForeignKey("Espaco", on_delete=models.CASCADE, related_name='espaco_fim',null=False)
@@ -81,10 +84,7 @@ class Percurso(models.Model):
     class Meta:
         db_table = 'Percurso'
         verbose_name_plural = "Percursos"
-
-class Beacon(models.Model):
-    beacon_local = str
-    beacon_espaco = str
+        ordering = ("local", "destino", 'sequencia')
 
 class LocalApp(models.Model):
     beacon_local = str

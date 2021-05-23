@@ -1,12 +1,7 @@
-import json
 from web.models import *
-from web.serializers import BeaconSerializer, LocalSerializer
-from django.http.response import HttpResponse, JsonResponse
-from rest_framework.response import Response
-from rest_framework.serializers import Serializer
+from django.http.response import JsonResponse
 from rest_framework.views import APIView
 from rest_framework import status
-from django.core import serializers
 
 
 # Create your views here.
@@ -14,8 +9,8 @@ class OndeEstou(APIView):
     def post(self, request):
         try:
             beacon = request.data
-            espacoObjs = Espaco.objects.filter(beacon_espaco = beacon["beacon_espaco"])
             localObjs = Local.objects.filter(beacon_local = beacon["beacon_local"])
+            espacoObjs = Espaco.objects.filter(beacon_espaco = beacon["beacon_espaco"], local = localObjs[0])
             espaco= espacoObjs[0]
             local = localObjs[0]
             o_a = ["o", "a"]
@@ -28,14 +23,14 @@ class OndeEstou(APIView):
 
             return JsonResponse(response, status=status.HTTP_200_OK)
         except Exception:
-            return JsonResponse({'mensagem': "deu ruim"}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse({'mensagem': "Ocorreu um erro na aplicação web"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class DescreverLocal(APIView):
     def post(self, request):
         try:
-            beacon = request.data
-            espacoObjs = Espaco.objects.filter(beacon_espaco = beacon["beacon_espaco"])
+            beacon = request.data           
             localObjs = Local.objects.filter(beacon_local = beacon["beacon_local"])
+            espacoObjs = Espaco.objects.filter(beacon_espaco = beacon["beacon_espaco"], local = localObjs[0])
             espaco= espacoObjs[0]
             local = localObjs[0]
             O_A = ["O", "A"]
@@ -49,13 +44,14 @@ class DescreverLocal(APIView):
 
             return JsonResponse(response, status=status.HTTP_200_OK)
         except Exception:
-            return JsonResponse({'mensagem': "deu ruim"}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse({'mensagem': "Ocorreu um erro na aplicação web"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class Destinos(APIView):
     def post(self, request):
         try:
             beacon = request.data
-            espacoObjs = Espaco.objects.filter(beacon_espaco = beacon["beacon_espaco"])
+            localObjs = Local.objects.filter(beacon_local = beacon["beacon_local"])
+            espacoObjs = Espaco.objects.filter(beacon_espaco = beacon["beacon_espaco"], local = localObjs[0])
             destinos = []
             for d in Destino.objects.filter(espaco_inicio = espacoObjs[0]):
                 percursos = []
@@ -69,7 +65,6 @@ class Destinos(APIView):
                     }
                     percursos.append(serialized)
                     print(p.instrucao)
-                #destino_final = Espaco.objects.filter(id = d.espaco_final)
                 serialized_ = {
                     'nome' : d.espaco_final.nome,
                     'percursos' : percursos
@@ -81,7 +76,7 @@ class Destinos(APIView):
         
             return JsonResponse(response, status=status.HTTP_200_OK)
         except Exception:
-            return JsonResponse({'mensagem': "deu ruim"}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse({'mensagem': "Ocorreu um erro na aplicação web"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class Locais(APIView):
     def get(self, request):
@@ -102,4 +97,4 @@ class Locais(APIView):
             print(locais)
             return JsonResponse(locais, status=status.HTTP_200_OK)          
         except Exception:
-            return JsonResponse({'mensagem': "deu ruim"}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse({'mensagem': "Ocorreu um erro na aplicação web"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
