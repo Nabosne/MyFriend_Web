@@ -11,17 +11,9 @@ class LocalAdmin(admin.ModelAdmin):
 class TipoLocalAdmin(admin.ModelAdmin):
     list_display = ['nome']
 
-@admin.register(Beacon)
-class BeaconAdmin(admin.ModelAdmin):
-    list_display = ['nome']
-
-@admin.register(Locais)
+@admin.register(Espaco)
 class EspacoAdmin(admin.ModelAdmin):
-    list_display = ['local']
-
-@admin.register(Espacos)
-class EspacosAdmin(admin.ModelAdmin):
-    list_display = ['id']
+    list_display = ['nome']
 
 @admin.register(Destino)
 class DestinoAdmin(admin.ModelAdmin):
